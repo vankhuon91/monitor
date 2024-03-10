@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/01/26 11:55:46.000.791,=C:\Users\vankh\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/03/06 08:04:19.000.744,=C:\Users\vankh\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/03/06 08:04:36.000.663,D:\PROJECT\Delphi\Monitor\Umain.dfm=C:\Users\vankh\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2024/03/06 08:04:36.000.663,D:\PROJECT\Delphi\Monitor\Umain.pas=C:\Users\vankh\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/03/06 08:04:44.000.505,D:\PROJECT\Delphi\Monitor\Monitor.dproj=C:\Users\vankh\OneDrive\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2024/03/06 09:21:31.000.032,=D:\PROJECT\Delphi\Monitor\Unit1.pas</Transaction>
+    <Transaction>2024/03/06 09:21:51.000.262,D:\PROJECT\Delphi\Monitor\Unit1.pas=D:\PROJECT\Delphi\Monitor\Unetwork.pas</Transaction>
+    <Transaction>2024/03/06 09:39:40.000.035,=D:\PROJECT\Delphi\Monitor\Unit1.pas</Transaction>
+    <Transaction>2024/03/06 09:40:19.000.447,D:\PROJECT\Delphi\Monitor\Unit1.pas=D:\PROJECT\Delphi\Monitor\UDriver.pas</Transaction>
+    <Transaction>2024/03/06 09:48:06.000.257,=D:\PROJECT\Delphi\Monitor\UMonFile.pas</Transaction>
+    <Transaction>2024/03/07 08:14:01.000.883,=D:\PROJECT\Delphi\Monitor\Unit1.pas</Transaction>
+    <Transaction>2024/03/07 08:14:24.000.003,D:\PROJECT\Delphi\Monitor\Unit1.pas=D:\PROJECT\Delphi\Monitor\Ulog.pas</Transaction>
+    <Transaction>2024/03/07 14:08:50.000.370,=D:\PROJECT\Delphi\Monitor\Unit1.pas</Transaction>
+    <Transaction>2024/03/07 14:09:08.000.443,D:\PROJECT\Delphi\Monitor\UUSB.pas=D:\PROJECT\Delphi\Monitor\Unit1.pas</Transaction>
+    <Transaction>2024/03/07 15:26:33.000.510,=D:\PROJECT\Delphi\Monitor\UComputer.pas</Transaction>
+    <Transaction>2024/03/08 09:26:20.000.574,=D:\PROJECT\Delphi\Monitor\UConfig.pas</Transaction>
+    <Transaction>2024/03/08 09:27:44.000.181,D:\PROJECT\Delphi\Monitor\UApp.pas=D:\PROJECT\Delphi\Monitor\UComputer.pas</Transaction>
+    <Transaction>2024/03/09 16:50:12.000.188,D:\PROJECT\Delphi\Monitor\UDriver.pas=</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Umain.pas"/>
+    <File Path="Umain.dfm"/>
+    <File Path="UMonFile.pas"/>
+    <File Path="Unetwork.pas"/>
+    <File Path="Ulog.pas"/>
+    <File Path="UUSB.pas"/>
+    <File Path="UApp.pas"/>
+    <File Path="UConfig.pas"/>
+  </ProjectSortOrder>
+</BorlandProject>

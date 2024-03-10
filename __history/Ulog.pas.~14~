@@ -1,0 +1,39 @@
+unit Ulog;
+
+interface
+
+uses System.SysUtils;
+
+const
+  FileLog = 'Monitor.log';
+
+type
+  Tlog = class
+    function savelog(filename, data: string; isrewrite: boolean): boolean;
+  end;
+
+implementation
+
+{ Tlog }
+
+function Tlog.savelog(filename, data: string; isrewrite: boolean): boolean;
+var
+  f: textfile;
+begin
+  try
+
+    assignfile(f, filename);
+    if not fileexists(filename) or isrewrite then
+      rewrite(f)
+    else
+      append(f);
+    Writeln(f, data);
+    closefile(f);
+
+  except
+
+  end;
+
+end;
+
+end.

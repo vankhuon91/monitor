@@ -1,0 +1,38 @@
+unit UUSB;
+
+interface
+
+uses Umonfile, Unetwork, UApp, System.SysUtils, System.JSON;
+
+type
+  TUSB = class
+    function addusb(disk: string): string;
+  end;
+
+var
+  mUSB: TUSB;
+
+implementation
+
+{ TUSB }
+
+function TUSB.addusb(disk: string): string;
+var
+  data: string;
+begin
+  try
+
+    mMonFile.MonitorDisk(disk);
+    data := Format
+      ('[{"computer_name":"%s","local_ip": "%s","mac": "%s","event_type": "usb","event_info": "%s","event_time":"%s"}]',
+      [TJSONSTRING.Create(mApp.mComInfo.computername).ToString,
+      TJSONSTRING.Create(mApp.mComInfo.ip).ToString,
+      TJSONSTRING.Create(mApp.mComInfo.mac).ToString, 'Plug-in ' + disk,
+      FormatDateTime('yyyy-mm-dd hh:nn:ss', now())]);
+    mhttp.sendata(mApp.api + '/api/v1/events/insert', 'POST', data);
+  except
+
+  end;
+end;
+
+end.

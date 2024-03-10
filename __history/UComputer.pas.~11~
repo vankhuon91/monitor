@@ -1,0 +1,278 @@
+﻿unit UComputer;
+
+interface
+
+uses
+  Classes, Types, Windows, SysUtils,
+  strUtils, ShlObj, TlHelp32, ComObj, ActiveX, Registry;
+
+type
+  TComInfo = record
+    computername, serialdisk, id, ip, mac, user, os: string[255];
+
+  end;
+
+  TComputer = class
+    mComInfo: TComInfo;
+    function getFullInfo: boolean;
+    function getserialDisk(disk: string): string;
+    function getComname: string;
+    function getip: string;
+    function getUser: String;
+    function getmac(ip: string): String;
+    function getos: String;
+
+  end;
+
+var
+  mComputer: TComputer;
+
+implementation
+
+uses
+  System.JSON;
+
+function TComputer.getFullInfo: boolean;
+begin
+  try
+
+    mComInfo.computername := getComname();
+    mComInfo.os := getOS;
+
+
+  except
+    on e: exception do
+  end;
+
+end;
+
+function TComputer.getmac(ip: string): string;
+const
+  wbemFlagForwardOnly = $00000020;
+var
+  FSWbemLocator: OLEVariant;
+  FWMIService: OLEVariant;
+  FWbemObjectSet: OLEVariant;
+  FWbemObject: OLEVariant;
+  oEnum: IEnumvariant;
+  iValue: LongWord;
+  cur_mac, cur_ip, descr: string;
+  i: integer;
+  IPEnabled: boolean;
+  listadd: Tstringlist;
+begin;
+  try
+    Coinitialize(nil);
+    listadd := Tstringlist.Create();
+    FSWbemLocator := CreateOleObject('WbemScripting.SWbemLocator');
+    FWMIService := FSWbemLocator.ConnectServer('localhost',
+      'root\CIMV2', '', '');
+    FWbemObjectSet := FWMIService.ExecQuery
+      ('SELECT * FROM Win32_NetworkAdapterConfiguration', 'WQL',
+      wbemFlagForwardOnly);
+    oEnum := IUnknown(FWbemObjectSet._NewEnum) as IEnumvariant;
+    IPEnabled := false;
+    while oEnum.Next(1, FWbemObject, iValue) = 0 do
+    begin
+      try
+        descr := String(FWbemObject.Description);
+        cur_mac := String(FWbemObject.MACAddress);
+        cur_mac := StringReplace(cur_mac, ':', '-',
+          [rfReplaceAll, rfIgnoreCase]);
+        cur_ip := (FWbemObject.ipaddress[0]);
+        if ip = cur_ip then
+        begin
+          result := cur_mac;
+          break;
+        end;
+      except
+      end;
+    end;
+  except
+    on e: exception do
+  end;
+end;
+
+function TComputer.getIpMac: Tstringlist;
+var
+  mIPMAC: Tstringlist;
+  i: integer;
+begin
+  try
+    mComInfo.realIP := mUntilities.getip
+      (mConfig.readinifile(pathfolder + '\data\config.ini', 'Server',
+      'api_log'));
+    mComInfo.realMAC := mUntilities.getmacfromip(mComInfo.realIP);
+    mIPMAC := Tstringlist.Create;
+    mIPMAC := getAdapter;
+    mComInfo.fullAdapter := mIPMAC[0];
+    for i := 1 to mIPMAC.Count - 1 do
+      mComInfo.fullAdapter := mComInfo.fullAdapter + '; ' + mIPMAC[i];
+    // msystem.savelog('D:\log.txt',mComInfo.ip+'--'+mComInfo.mac+'--'+mComInfo.fullAdapter+'---'+inttostr(mIPMAC.Count),false);
+    mIPMAC.Free;
+
+  except
+
+  end;
+
+end;
+
+function TComputer.getComname: string;
+var
+  CompName: array [0 .. 256] of char;
+  i: DWord;
+begin
+  try
+    i := 256;
+    GetComputerName(CompName, i);
+    result := StrPas(CompName);
+  except
+
+  end;
+end;
+
+function TComputer.getserialDisk(disk: string): string;
+var
+  VolumeName, FileSystemName: array [0 .. MAX_PATH - 1] of char;
+  VolumeSerialNo: DWord;
+  MaxComponentLength, FileSystemFlags: Cardinal;
+begin
+  try
+    GetVolumeInformation(PChar(disk + '\'), VolumeName, MAX_PATH,
+      @VolumeSerialNo, MaxComponentLength, FileSystemFlags, FileSystemName,
+      MAX_PATH);
+    result := inttostr(VolumeSerialNo);
+  except
+    result := '';
+  end;
+end;
+
+
+
+function TComputer.getUser: String;
+var
+  nSize: DWord;
+begin
+  try
+    nSize := 1024;
+    SetLength(result, nSize);
+    if getUserName(PChar(result), nSize) then
+      SetLength(result,nSize - 1);
+  except
+  end;
+end;
+
+function TComputer.OS: string;
+var
+  // info: TOSVersionInfoW;
+  info: TOSVersion;
+  verOS: string;
+begin
+  try
+    // result := '';
+    // info.dwOSVersionInfoSize := sizeof(info);
+    // GetVersionEx(info);
+    //
+    // result := (info.szCSDVersion);
+    result := 'Windows XP';
+    result := TOSVersion.ToString;
+  except
+
+  end;
+end;
+
+function TComputer.getCpu: String;
+var
+  Reg: TRegistry;
+
+begin
+  try
+    result := '';
+    Reg := TRegistry.Create(KEY_QUERY_VALUE);
+    try
+      Reg.RootKey := HKEY_LOCAL_MACHINE;
+      if Reg.OpenKey('\Hardware\Description\System\CentralProcessor\0', false)
+      then
+      begin
+        result := 'Name: ' + Reg.ReadString('ProcessorNameString') + ', ';
+        Reg.CloseKey;
+      end;
+      if Reg.OpenKeyReadOnly('HARDWARE\DESCRIPTION\System\CentralProcessor\0')
+      then
+      begin
+        result := result + Format('CPU Speed is %dMHz',
+          [Reg.ReadInteger('~MHz')]);
+        Reg.CloseKey;
+      end;
+    finally
+      Reg.Free;
+    end;
+  except
+
+  end;
+end;
+
+function TComputer.getTotalRam: string;
+const
+  WbemUser = '';
+  WbemPassword = '';
+  WbemComputer = 'localhost';
+  wbemFlagForwardOnly = $00000020;
+var
+  FSWbemLocator: OLEVariant;
+  FWMIService: OLEVariant;
+  FWbemObjectSet: OLEVariant;
+  FWbemObject: OLEVariant;
+  oEnum: IEnumvariant;
+  iValue: LongWord;
+  i: Int64;
+begin
+  try
+    result := '';
+    FSWbemLocator := CreateOleObject('WbemScripting.SWbemLocator');
+    FWMIService := FSWbemLocator.ConnectServer(WbemComputer, 'root\CIMV2',
+      WbemUser, WbemPassword);
+    FWbemObjectSet := FWMIService.ExecQuery
+      ('SELECT * FROM Win32_ComputerSystem', 'WQL', wbemFlagForwardOnly);
+    oEnum := IUnknown(FWbemObjectSet._NewEnum) as IEnumvariant;
+    while oEnum.Next(1, FWbemObject, iValue) = 0 do
+    begin
+      // Writeln(Format('TotalPhysicalMemory    %d',[Integer(FWbemObject.TotalPhysicalMemory)]));// Uint64
+      // result := inttostr(Integer(FWbemObject.TotalPhysicalMemory)/1024/1024/1024);
+      i := strtoint64(string(FWbemObject.TotalPhysicalMemory));
+      // result := floattostr(i/1073741824);
+      result := floattostrf(i / 1073741824, ffNumber, 4, 2)
+    end;
+  except
+
+  end;
+end;
+
+function TComputer.getRam: string;
+var
+  MyStatus: TMemoryStatus;
+begin
+  try
+    result := '';
+    MyStatus.dwLength := sizeof(MyStatus);
+    GlobalmemoryStatus(MyStatus);
+    // with Memo1.Lines do
+    begin
+      result := FloatToStr(MyStatus.dwMemoryLoad) + '% memory in use {Total: ' +
+        getTotalRam + 'Gb}';
+      // Add(FloatToStr(MyStatus.dwMemoryLoad)+'% memory in use');
+      // Add(FloatToStr(MyStatus.dwTotalPhys/1024)+ ' Kb of physical memory');
+      // Add(FloatToStr(MyStatus.dwAvailPhys/1024)+ ' Kb of available physical memory');
+      // Add(FloatToStr(MyStatus.dwTotalPageFile/1024)+ ' Kb that can be stored in the paging file');
+      // Add(FloatToStr(MyStatus.dwAvailPageFile/1024)+ ' Kb available in the paging file');
+    end;
+  except
+    on e: exception do
+    begin
+      msystem.debugLog('getRam error: ' + '--' + e.Message);
+    end;
+
+  end;
+end;
+
+end.

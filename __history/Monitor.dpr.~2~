@@ -1,0 +1,15 @@
+program Monitor;
+
+uses
+  Vcl.Forms,
+  Umain in 'Umain.pas' {Form1},
+  Unetwork in 'Unetwork.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

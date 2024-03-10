@@ -1,0 +1,21 @@
+program Monitor;
+
+uses
+  Vcl.Forms,
+  Umain in 'Umain.pas' {Form1},
+  Unetwork in 'Unetwork.pas',
+  UDriver in 'UDriver.pas',
+  UMonFile in 'UMonFile.pas',
+  Ulog in 'Ulog.pas',
+  UUSB in 'UUSB.pas',
+  UComputer in 'UComputer.pas',
+  UConfig in 'UConfig.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

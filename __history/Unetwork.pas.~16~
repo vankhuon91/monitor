@@ -1,0 +1,57 @@
+unit Unetwork;
+
+interface
+
+uses System.SysUtils,REST.CLIENT, REST.Types, System.Net.HttpClientcomponent,
+  System.Net.HttpClient, Ulog;
+
+type
+  Thttp = class
+    function sendata(host, method, body: string): string;
+  end;
+
+implementation
+
+function Thttp.sendata(host, method, body: string): string;
+var
+  RestClient: Trestclient;
+  restrequest: Trestrequest;
+  restResponse: Trestresponse;
+  pos:integer;
+
+begin
+  try
+    try
+      RestClient := Trestclient.Create(nil);
+      restrequest := Trestrequest.Create(nil);
+      restResponse := Trestresponse.Create(nil);
+
+      RestClient.BaseURL := host;
+      RestClient.Accept := 'application/json';
+      RestClient.AcceptCharset := 'UTF-8';
+      RestClient.ContentType := 'application/json';
+      RestClient.SecureProtocols := [THTTPSecureProtocol.TLS12];
+
+      restrequest.CLIENT := RestClient;
+     // AnsiIndexStr(method, ['bobby', 'tommy', 'somename'])
+
+        restrequest.ClearBody;
+        restrequest.AddBody(body, ctapplication_json);
+
+        restrequest.Response := restResponse;
+        restrequest.Execute;
+        result := restResponse.Content;
+        finally RestClient.Free;
+        restrequest.Free;
+        restResponse.Free;
+
+        end;
+
+        except on e:
+          exception do mlog.savelog('Error send data ' + host + ' ' + body +
+            ' --.' + e.Message)
+
+      end;
+    end;
+
+end.
