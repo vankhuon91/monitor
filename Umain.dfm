@@ -20,10 +20,4 @@ object Form1: TForm1
     Left = 384
     Top = 32
   end
-  object RVAudioPlayer1: TRVAudioPlayer
-    VolumeMultiplier = 1.000000000000000000
-    NoiseReduction = True
-    Left = 232
-    Top = 104
-  end
 end

@@ -5,6 +5,7 @@
 #define MyAppVersion "1.5"
 #define MyAppPublisher "Mon, Inc."
 #define MyAppExeName "Monitor.exe"
+#define MyAppExeName2 "Discovery.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -30,13 +31,19 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "D:\PROJECT\Delphi\Monitor\Win32\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\PROJECT\Delphi\Monitor\tools\InstallCallBackFilter.exe"; DestDir: "{tmp}"; Flags: ignoreversion;
+Source: "D:\PROJECT\Delphi\Monitor\Setup\Src\Discovery.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\PROJECT\Delphi\Monitor\Setup\Src\config.ini"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\PROJECT\Delphi\Monitor\tools\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
 Source: "D:\PROJECT\Delphi\Monitor\tools\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
 
+[Registry]
+Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Monitor"; ValueData: "{app}\{#MyAppExeName}"
+Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Discovery"; ValueData: "{app}\{#MyAppExeName2}"
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+
 
 [Run]
 Filename: {tmp}\InstallCallBackFilter.exe; Flags: runhidden
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Discovery.exe"; Flags: nowait postinstall skipifsilent
 

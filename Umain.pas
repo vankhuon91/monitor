@@ -11,12 +11,12 @@ uses
 type
   TForm1 = class(TForm)
     SHChangeNotify1: TSHChangeNotify;
-    RVAudioPlayer1: TRVAudioPlayer;
     procedure SHChangeNotify1DriveAdd(Sender: TObject; Flags: Cardinal;
       Path1: string);
     procedure FormCreate(Sender: TObject);
     procedure SHChangeNotify1DriveRemoved(Sender: TObject; Flags: Cardinal;
       Path1: string);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -29,6 +29,14 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var path:string;
+
+begin
+     path:= '\\?\Volume{00000001-0000-0000-0000-30c300000000}\';
+     mlog.savedata(path+'abc.txt','new',false)
+end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin

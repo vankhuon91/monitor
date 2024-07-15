@@ -5,7 +5,7 @@ interface
 uses
   Classes, Types, Windows, SysUtils,
   strUtils, ShlObj, TlHelp32, ComObj, ActiveX, Registry, IdTelnet, IdURI,
-  Uconfig, Vcl.Dialogs,System.IOUtils;
+  Uconfig, Vcl.Dialogs, System.IOUtils;
 
 const
   fileconfig = 'config.ini';
@@ -16,8 +16,11 @@ type
 
   end;
 
+
+
   TApp = class
-    app_folder:string;
+
+    app_folder: string;
     api: string;
     mComInfo: TComInfo;
     function getFullInfo: boolean;
@@ -37,8 +40,8 @@ implementation
 function TApp.getFullInfo: boolean;
 begin
   try
-    app_folder:=TDirectory.GetCurrentDirectory;
-    api := mconfig.readinifile(app_folder+'\'+ fileconfig, 'server', 'api');
+    app_folder := TDirectory.GetCurrentDirectory;
+    api := mconfig.readinifile(app_folder + '\' + fileconfig, 'server', 'api');
     mComInfo.computername := getComname();
     mComInfo.os := getos;
     mComInfo.ip := GetIp(api);
@@ -70,14 +73,14 @@ begin;
     FWMIService := FSWbemLocator.ConnectServer('localhost',
       'root\CIMV2', '', '');
     FWbemObjectSet := FWMIService.ExecQuery
-      ('SELECT * FROM Win32_NetworkAdapterConfiguration where IPEnabled=true', 'WQL',
-      wbemFlagForwardOnly);
+      ('SELECT * FROM Win32_NetworkAdapterConfiguration where IPEnabled=true',
+      'WQL', wbemFlagForwardOnly);
     oEnum := IUnknown(FWbemObjectSet._NewEnum) as IEnumvariant;
     while oEnum.Next(1, FWbemObject, iValue) = 0 do
     begin
       try
         descr := String(FWbemObject.Description);
-       // if (FWbemObject.MACAddress = nil) then c
+        // if (FWbemObject.MACAddress = nil) then c
 
         cur_mac := String(FWbemObject.MACAddress);
         cur_mac := StringReplace(cur_mac, ':', '-',
@@ -104,16 +107,16 @@ begin
   try
     IdTelnet := TIdTelnet.Create();
     URI := TIdURI.Create(URL);
-    if (URI.Port = '') then
+    if (URI.port = '') then
       if URI.Protocol = 'http' then
-        URI.Port := '80'
+        URI.port := '80'
       else if URI.Protocol = 'https' then
-        URI.Port := '443'
+        URI.port := '443'
       else
-        URI.Port := '443';
+        URI.port := '443';
     try
-      IdTelnet.Host := URI.Host;
-      IdTelnet.Port := strtoint(URI.Port);
+      IdTelnet.host := URI.host;
+      IdTelnet.port := strtoint(URI.port);
       IdTelnet.ConnectTimeout := 1000;
       IdTelnet.Connect;
       result := IdTelnet.Socket.Binding.ip;
