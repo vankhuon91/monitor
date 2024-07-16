@@ -19,7 +19,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=D:\PROJECT\Delphi\Monitor\Setup
+OutputDir=.
 OutputBaseFilename=setup_monitor
 Compression=lzma
 SolidCompression=yes
@@ -29,12 +29,12 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "D:\PROJECT\Delphi\Monitor\Win32\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PROJECT\Delphi\Monitor\tools\InstallCallBackFilter.exe"; DestDir: "{tmp}"; Flags: ignoreversion;
-Source: "D:\PROJECT\Delphi\Monitor\Setup\Src\Discovery.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PROJECT\Delphi\Monitor\Setup\Src\config.ini"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\PROJECT\Delphi\Monitor\tools\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
-Source: "D:\PROJECT\Delphi\Monitor\tools\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
+Source: "..\Win32\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\InstallCallBackFilter.exe"; DestDir: "{tmp}"; Flags: ignoreversion;
+Source: "..\Setup\Src\Discovery.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Setup\Src\config.ini"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\tools\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
+Source: "..\tools\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion ;
 
 [Registry]
 Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Monitor"; ValueData: "{app}\{#MyAppExeName}"
@@ -45,5 +45,5 @@ Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 [Run]
 Filename: {tmp}\InstallCallBackFilter.exe; Flags: runhidden
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\Discovery.exe"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Discovery.exe"; Flags: nowait postinstall skipifsilent runhidden
 
